@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Marinheiro 555</title>
+        <style type='text/CSS'>
+            #header{
+                background-color: #547B94;
+                border-radius: 10px;
+                padding: 5px;
+                width: 100%;
+                overflow: hidden;
+                height: 20%;
+            }
+            .titulo{                
+                font-family: Brush Script MT, Brush Script Std, cursive;
+                text-align: center;
+                font-size: 30px;
+                /*color: #c9a959;*/
+                color:  #e6c99f;
+            }
+            body{
+                background-color: #f4f2ef;
+                background-size: 100% 100%;
+                overflow: hidden;
+            }
+            .wrapper{
+                width: 80%;
+                padding: 5%;
+            }
+            #powerbtn{
+                border-radius:  5px;
+                text-shadow: 5px;
+                border: 0px;
+                padding-top: 10px;
+                padding-bottom: 10px;
+                font-size: 20px;
+                width: 100%;
+                height: 10em;
+            }
+            .OFF{
+                background-color: #547B94;
+                color:  #e6c99f;
+            }
+            .ON{
+                background-color: #e4850f;
+                color: #2B2519;
+            }
+            .center{
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100%;
+                /*border: 3px solid green;*/
+            }
+            .slidecontainer {
+                position: absolute;
+                width: 100%; /* Width of the outside container */
+            }
+            .slider {
+                -webkit-appearance: none;
+                appearance: none;
+                width: 80%;
+                height: 10em;
+                background: #d3d3d3;
+                outline: none; 
+                opacity: 0.7; 
+                -webkit-transition: .2s; 
+                transition: opacity .2s;
+            }
+            .slider:hover {
+                opacity: 1;
+            }
+            .slider::-webkit-slider-thumb{
+                -webkit-appearance: none;
+                appearance: none;
+                width: 20em;
+                height: 20em;
+                border-radius: 50%; 
+                background: #2076ac;
+                cursor: pointer;
+            }
+            .spacer{
+                padding-top: 10%;
+            }
+            .angle{
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100%;
+                padding: 2%;
+                font-size: 20px;
+            }
+            .angle {
+                height: 10em;
+                font-size: 20px;
+            }
+            
+            
+        </style>
+    </head>
+    <body>
+        <header id='header'>
+            <div class='titulo'>
+                <h1>Marinheiro 555</h1>
+            </div>
+        </header>
+        <div class='wrapper'>
+            <div class='center'>
+                <input type='button' value='Ligar' id='powerbtn' class='OFF'>
+            </div>
+            <div class = 'spacer'></div>
+            <div class='angle'>Angulo: <span id='angulo'></span></div>
+            <div class='slidecontainer'>
+                <input type='range' min='0' max='180' value='90' class='slider' id='anguloServo'>
+            </div>
+        </div>
+        <footer>
+
+        </footer>
+
+        <script>
+            var Socket;
+            var angulo = document.getElementById('anguloServo');
+            var resposta = document.getElementById('angulo');
+            resposta.innerText = angulo.value;
+            var botao = document.getElementById('powerbtn');
+            
+            botao.addEventListener('click', powerChanged);
+            angulo.addEventListener('input', sendServo);
+            
+            function startWebSocket(){
+                Socket = new WebSocket('ws://'+window.location.hostname+':81/');
+                Socket.onmessage = function(event){
+                    processarComando(event);
+                }
+            }
+
+            function processarComando(event) {
+                console.log(event.data);
+                switch (event.data){
+                    case 'Ligado':
+                        botao.className = 'ON';
+                        botao.value = 'Desligar';
+                        break;
+                    case 'Desligado':
+                            botao.className = 'OFF';
+                            botao.value = 'Ligar';
+                        break;
+                }
+            }
+
+            function powerChanged(){
+                console.log(botao.value);
+                handleSocketSend(botao.value);
+                
+                if(botao.value == 'Ligar'){
+                    botao.className = 'ON';
+                    botao.value = 'Desligar';
+                }
+                else{
+                    botao.className = 'OFF';
+                    botao.value = 'Ligar';
+                }
+                
+            }
+
+            function sendServo(){
+                resposta.innerText = angulo.value;
+                console.log(angulo.value);
+                handleSocketSend(angulo.value);
+            }
+
+            function handleSocketSend(valor){
+                Socket.send(valor);
+            }
+
+
+
+            window.onload = function(event){
+                startWebSocket();
+            }
+
+
+        </script>
+
+
+
+    </body>
+</html>
