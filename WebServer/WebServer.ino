@@ -121,7 +121,7 @@ void setup() {
 
   //Serial.print("Endereco de IP - ");
   //Serial.println(WiFi.softAPIP());
-  WiFi.begin("Alves-2.4G","DuLiMuMa24191613");  
+  WiFi.begin(SSID_REDE,SENHA_REDE);  
   Serial.print("Conectando...");
     while(WiFi.status() != WL_CONNECTED){
       Serial.print('.');
