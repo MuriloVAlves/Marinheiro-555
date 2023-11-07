@@ -123,19 +123,21 @@ void setup() {
   Serial.print("Criando ponto de acesso... ");
   Serial.println(WiFi.softAP(SSID_REDE,SENHA_REDE)? "Pronto": "Falhou");
 
-  //Serial.print("Endereco de IP - ");
-  //Serial.println(WiFi.softAPIP());
+  Serial.print("Endereco de IP - ");
+  Serial.println(WiFi.softAPIP());
+
+  //Para conectar a um roteador
   //WiFi.begin(SSID_REDE,SENHA_REDE);  
-  Serial.print("Conectando...");
-    while(WiFi.status() != WL_CONNECTED){
-      Serial.print('.');
-      delay(500);
-      changeStatus();
-    }
-   Serial.println("");
-   Serial.print("Conectado com o IP: ");
-   Serial.println(WiFi.localIP());
-   statusLow();
+  // Serial.print("Conectando...");
+  //   while(WiFi.status() != WL_CONNECTED){
+  //     Serial.print('.');
+  //     delay(500);
+  //     changeStatus();
+  //   }
+  //  Serial.println("");
+  //  Serial.print("Conectado com o IP: ");
+  //  Serial.println(WiFi.localIP());
+  //  statusLow();
 
    
   server.on("/", []() {
