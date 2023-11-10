@@ -137,7 +137,8 @@
 
             function processarComando(event) {
                 console.log(event.data);
-                switch (event.data){
+                let dados = event.data.split(';');
+                switch (dados[0]){
                     case 'Ligado':
                         botao.className = 'ON';
                         botao.value = 'Desligar';
@@ -147,6 +148,11 @@
                             botao.value = 'Ligar';
                         break;
                 }
+                let anguloESP32 = dados[1];
+                console.log(anguloESP32);
+                angulo.value = anguloESP32;
+                resposta.innerText = angulo.value;
+
             }
 
             function powerChanged(){
